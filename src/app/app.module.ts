@@ -2,17 +2,26 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
+import { BucketsComponent } from './buckets.component';
+
+const routing = RouterModule.forRoot([
+    { path: '',      component: BucketsComponent },
+    { path: 'buckets', component: BucketsComponent }
+]);
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    BucketsComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    routing
   ],
   providers: [],
   bootstrap: [AppComponent]

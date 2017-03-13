@@ -1,0 +1,29 @@
+<div class="card" *ngIf="isLoading">
+  <h4 class="card-header">Loading...</h4>
+  <div class="card-block text-xs-center">
+    <i class="fa fa-circle-o-notch fa-spin fa-3x"></i>
+  </div>
+</div>
+
+<div class="card" *ngIf="!isLoading">
+    <h4 class="card-header">Bucket List ({{buckets.length}})</h4>
+    <div class="card-block">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-default">
+                <tr>
+                <th>Name</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="buckets.length === 0">
+                <tr>
+                    <td colspan="4">There are no buckets.</td>
+                </tr>  
+            </tbody>
+            <tbody *ngIf="buckets.length !== 0">
+                <tr *ngFor="let bucket of buckets">
+                    <td>{{bucket}}</td>
+                </tr> 
+            </tbody>
+        </table>
+    </div>
+</div>

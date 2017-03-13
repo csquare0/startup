@@ -1,3 +1,13 @@
-<h1>
-  {{title}}
-</h1>
+<div class="container">
+
+  <nav class="navbar navbar-dark bg-primary">
+    <div class="nav navbar-nav">
+      <a routerLink="/buckets" class="nav-item nav-link" routerLinkActive="active">
+        <i class="fa fa-home"></i> Buckets
+      </a>
+    </div>
+  </nav>
+
+  <router-outlet></router-outlet>
+
+</div>
