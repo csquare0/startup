@@ -1,7 +1,9 @@
 import * as bodyParser from "body-parser";
+import * as logger from "morgan";
 import * as express from "express";
 import * as path from "path";
 
+import * as homeRoute from "./home";
 /**
  * The server.
  *
@@ -60,7 +62,24 @@ export class Server {
    * @method config
    */
   public config() {
-    //empty for now
+    this.app.use(express.static(path.join(__dirname, "../../dist")));
+
+    //mount logger
+    this.app.use(logger("dev"));
+
+    //mount json form parser
+    this.app.use(bodyParser.json());
+
+    //mount query string parser
+    this.app.use(bodyParser.urlencoded({
+      extended: true
+    }));
+
+    // catch 404 and forward to error handler
+    this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
+        err.status = 404;
+        next(err);
+    });
   }
 
   /**
@@ -70,6 +89,11 @@ export class Server {
    * @method api
    */
   public routes() {
-    //empty for now
+    let router: express.Router;
+    router = express.Router();
+
+    this.app.use('/', homeRoute.route());
+    //use router middleware
+    this.app.use(router);
   }
 }

@@ -5,7 +5,7 @@
   "scripts": {
     "grunt": "grunt",
     "ng": "ng",
-    "start": "ng build -w && node src/server/app.js",
+    "start": "concurrently \"ng build -w\" \"grunt\" \"node src/server/www.js\"",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -39,6 +39,7 @@
     "@types/jasmine": "2.5.38",
     "@types/node": "~6.0.60",
     "codelyzer": "~2.0.0",
+    "concurrently": "^3.4.0",
     "grunt": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",

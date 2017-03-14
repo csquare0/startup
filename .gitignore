@@ -39,3 +39,9 @@ testem.log
 #System Files
 .DS_Store
 Thumbs.db
+.tscache/
+
+src/server/home.js
+src/server/app.js
+src/server/health.js
+src/server/.baseDir.ts

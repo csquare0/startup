@@ -27,7 +27,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-ts");
 
   grunt.registerTask("default", [
-    "ts"
+    "ts",
+    "watch"
   ]);
 
 };
