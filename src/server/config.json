@@ -1,0 +1,10 @@
+{
+    "BASE_URL": "https://developer-stg.api.autodesk.com",
+    "AUTH_URL": "/authentication/v1/authenticate",
+    "BUCKET_URL":"/oss/v2/buckets",
+    "DERIVATIVE_URL":"/derivativeservice/v2",
+    "RENDER_URL":"/render/v1",
+    "OBJECT_URN_PREFIX":"urn.adsk.objects:os.object",
+    "CLIENT_ID":"FHWENj3iy8458lqRR9C4nyQqA7LDW8Bt",
+    "CLIENT_SECRET":"NDr20akjKaouDfvO"
+}

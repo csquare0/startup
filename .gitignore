@@ -45,3 +45,7 @@ src/server/home.js
 src/server/app.js
 src/server/health.js
 src/server/.baseDir.ts
+src/server/.baseDir.js
+src/server/auth.js
+src/server/buckets.js
+src/server/config.js

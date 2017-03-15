@@ -4,6 +4,7 @@ import * as express from "express";
 import * as path from "path";
 
 import * as homeRoute from "./home";
+import * as bucketRoute from "./buckets";
 /**
  * The server.
  *
@@ -93,6 +94,7 @@ export class Server {
     router = express.Router();
 
     this.app.use('/', homeRoute.route());
+    this.app.use('/buckets', bucketRoute.route());
     //use router middleware
     this.app.use(router);
   }

@@ -5,9 +5,9 @@
   </div>
 </div>
 
-<div class="card" *ngIf="!isLoading">
-    <h4 class="card-header">Bucket List ({{buckets.length}})</h4>
-    <div class="card-block">
+<div *ngIf="!isLoading">
+    <h4>Bucket List ({{buckets.length}})</h4>
+    <div>
         <table class="table table-bordered table-striped">
             <thead class="thead-default">
                 <tr>

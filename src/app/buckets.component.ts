@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-
+import { BucketsService, Bucket} from './buckets.service';
 @Component({
   selector: 'app-buckets',
   templateUrl: './buckets.component.html',
@@ -9,17 +9,20 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 })
 export class BucketsComponent implements OnInit {
 
-  buckets = [];
+  buckets : Bucket [] = [];
   isLoading = true;
 
-  constructor(private http: Http) { }
+  constructor(private bucketsService: BucketsService) { }
 
   ngOnInit() {
       this.getBuckets();
   }
 
   getBuckets() {
-    this.buckets.push(["Bucket1","Bucket2"]);
-    this.isLoading = false;
+    this.bucketsService.getBuckets().subscribe(
+      data => {this.buckets = data; this.isLoading=true;},
+      err => console.log(err),
+      () => console.log('getBuckets complete')
+    );
   }
 }
