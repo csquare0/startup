@@ -6,12 +6,26 @@
 </div>
 
 <div *ngIf="!isLoading">
-    <h4>Bucket List ({{buckets.length}})</h4>
     <div>
+        <br>
+        <input [(ngModel)]="newBucketName" placeholder="name" />
+        <button (click)="addBucket()"><span class="fa fa-file"></span>&nbsp;&nbsp;Add Bucket</button>
+    </div>
+    <div>
+        <h4>Bucket List ({{buckets.length}})</h4>
         <table class="table table-bordered table-striped">
+            <colgroup>
+                <col width="40%" />
+                <col width="35%" />
+                <col width="15%" />
+                <col width="10%" />
+            </colgroup>
             <thead class="thead-default">
                 <tr>
-                <th>Name</th>
+                    <th>Name</th>
+                    <th>CreateDate</th>
+                    <th>Policy</th>
+                    <th>Objects</th>
                 </tr>
             </thead>
             <tbody *ngIf="buckets.length === 0">
@@ -21,7 +35,43 @@
             </tbody>
             <tbody *ngIf="buckets.length !== 0">
                 <tr *ngFor="let bucket of buckets">
-                    <td>{{bucket}}</td>
+                    <td>{{bucket.bucketKey}}</td>
+                    <td>{{bucket.createdDate}}</td>
+                    <td>{{bucket.policyKey}}</td>
+                    <td><button (click)="showObjects(bucket.bucketKey)"><span class="fa fa-list"></span></button></td>
+                </tr> 
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div *ngIf="showObjectsPanel">
+    <div>
+        <h4>Object List in {{curBucketKey}} ({{objects.length}})</h4>
+        <table class="table table-bordered table-striped">
+            <thead class="thead-default">
+                <tr>
+                    <th>Object Key</th>
+                    <th>Object Id</th>
+                    <th>Size</th>
+                    <th>Location</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="objects.length === 0">
+                <tr>
+                    <td colspan="4">There are no objects.</td>
+                </tr>  
+            </tbody>
+            <tbody *ngIf="objects.length !== 0">
+                <tr *ngFor="let object of objects">
+                    <td>{{object.objectKey}}</td>
+                    <td>{{object.objectId}}</td>
+                    <td>{{object.size}}</td>
+                    <td>{{object.location}}</td>
+                    <td *ngIf="object.status===0"><button (click)="register(object)"><span title= "Register the Object" class="fa fa-plus"></span></button></td>
+                    <td *ngIf="object.status===1"><span title="Translating" class="fa fa-circle-o-notch fa-spin fa-1x"></span></td>
                 </tr> 
             </tbody>
         </table>

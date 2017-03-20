@@ -5,6 +5,7 @@ import * as path from "path";
 
 import * as homeRoute from "./home";
 import * as bucketRoute from "./buckets";
+import * as sceneRoute from "./scene";
 /**
  * The server.
  *
@@ -95,6 +96,7 @@ export class Server {
 
     this.app.use('/', homeRoute.route());
     this.app.use('/buckets', bucketRoute.route());
+    this.app.use('/scene', sceneRoute.route());
     //use router middleware
     this.app.use(router);
   }

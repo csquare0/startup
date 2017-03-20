@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { BucketsComponent } from './buckets.component';
 
 const routing = RouterModule.forRoot([
-    { path: '',      component: BucketsComponent },
+    { path: '', redirectTo: '/buckets', pathMatch: 'full' },
     { path: 'buckets', component: BucketsComponent }
 ]);
 
