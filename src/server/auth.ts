@@ -1,15 +1,20 @@
 import * as config from "./config";
 import * as Q from "q";
 import * as request from "request";
+import * as express from "express";
 
 var token: string;
 var expiretime: number;
 var starttime : number;
 
-export function getToken() : string {
-    if(starttime===undefined || (Date.now()/1000-starttime+120)>expiretime){
-    }
-    return token;
+export function route() : express.Router {
+    let router = express.Router();
+    router.get('/auth', function (req: express.Request, res: express.Response, next) {
+        authentication().then(function (token: IToken) {
+            res.send(token.token);
+        });
+    });
+    return router;
 }
 
 export function authentication() : Q.Promise<IToken> {

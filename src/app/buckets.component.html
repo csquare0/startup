@@ -70,8 +70,45 @@
                     <td>{{object.objectId}}</td>
                     <td>{{object.size}}</td>
                     <td>{{object.location}}</td>
-                    <td *ngIf="object.status===0"><button (click)="register(object)"><span title= "Register the Object" class="fa fa-plus"></span></button></td>
+                    <td *ngIf="object.status===0"><button (click)="registerScene(object)"><span title= "Register" class="fa fa-plus"></span></button></td>
                     <td *ngIf="object.status===1"><span title="Translating" class="fa fa-circle-o-notch fa-spin fa-1x"></span></td>
+                    <td *ngIf="object.status===2"><button (click)="showViews(object)"><span title= "Show Views" class="fa fa-list"></span></button></td>
+                    <td *ngIf="object.status===3"><span title="Translation Error" class="fa fa-exclamation" style="color:red"></span></td>
+                </tr> 
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div *ngIf="showViewsPanel">
+    <div>
+        <h4>Named View List in {{curSceneId}} ({{views.length}})</h4>
+        <table class="table table-bordered table-striped">
+            <thead class="thead-default">
+                <tr>
+                    <th>Named View</th>
+                    <th>Status</th>
+                    <th>Render ID</th>
+                    <th>Action</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="views.length === 0">
+                <tr>
+                    <td colspan="4">There are no named views.</td>
+                </tr>  
+            </tbody>
+            <tbody *ngIf="views.length !== 0">
+                <tr *ngFor="let view of views">
+                    <td>{{view.name}}</td>
+                    <td>{{view.status}}</td>
+                    <td>{{view.renderId}}</td>
+                    <td *ngIf="object.status===0"><button (click)="renderScene(view)"><span title= "Render" class="fa fa-play"></span></button></td>
+                    <td *ngIf="object.status===1"><span title="Rendering" class="fa fa-circle-o-notch fa-spin fa-1x"></span></td>
+                    <td *ngIf="object.status===2"><span title= "Open Render" class="fa fa-image"></span></td>
+                    <td *ngIf="object.status===3"><span title="Render Error" class="fa fa-exclamation" style="color:red"></span></td>
+                    <td>{{view.errormsg}}</td>
                 </tr> 
             </tbody>
         </table>
