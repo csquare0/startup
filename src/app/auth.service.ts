@@ -11,13 +11,13 @@ import 'rxjs/add/operator/catch';
 export class AuthService {
     constructor (private http: Http) {}
 
-    getToken() : Promise<string>{
-        let url = './auth';
-        return this.http.get(url).map(this.extractData).toPromise();
+    getToken() : Observable<string>{
+        let url = 'auth';
+        return this.http.get(url).map(this.extractData);
     }
 
-    extractData(res: Response) {
-        return res.toString();
+    extractData(res: Response) : string{
+        return res.text();
     }
     
 }

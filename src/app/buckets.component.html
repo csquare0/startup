@@ -50,11 +50,20 @@
     <div>
         <h4>Object List in {{curBucketKey}} ({{objects.length}})</h4>
         <table class="table table-bordered table-striped">
+            <colgroup>
+                <col width="15%" />
+                <col width="25%" />
+                <col width="5%" />
+                <col width="5%" />
+                <col width="45%" />
+                <col width="5%" />
+            </colgroup>
             <thead class="thead-default">
                 <tr>
                     <th>Object Key</th>
                     <th>Object Id</th>
                     <th>Size</th>
+                    <th>Status</th>
                     <th>Location</th>
                     <th>Action</th>
                 </tr>
@@ -69,6 +78,7 @@
                     <td>{{object.objectKey}}</td>
                     <td>{{object.objectId}}</td>
                     <td>{{object.size}}</td>
+                    <td>{{object.statusmsg}}</td>
                     <td>{{object.location}}</td>
                     <td *ngIf="object.status===0"><button (click)="registerScene(object)"><span title= "Register" class="fa fa-plus"></span></button></td>
                     <td *ngIf="object.status===1"><span title="Translating" class="fa fa-circle-o-notch fa-spin fa-1x"></span></td>
@@ -85,13 +95,21 @@
     <div>
         <h4>Named View List in {{curSceneId}} ({{views.length}})</h4>
         <table class="table table-bordered table-striped">
+            <colgroup>
+                <col width="15%" />
+                <col width="15%" />
+                <col width="15%" />
+                <col width="35%" />
+                <col width="5%" />
+                <col width="15%" />
+            </colgroup>
             <thead class="thead-default">
                 <tr>
-                    <th>Named View</th>
+                    <th>View</th>
+                    <th>Camera</th>
                     <th>Status</th>
                     <th>Render ID</th>
                     <th>Action</th>
-                    <th>Error</th>
                 </tr>
             </thead>
             <tbody *ngIf="views.length === 0">
@@ -101,14 +119,14 @@
             </tbody>
             <tbody *ngIf="views.length !== 0">
                 <tr *ngFor="let view of views">
-                    <td>{{view.name}}</td>
-                    <td>{{view.status}}</td>
+                    <td>{{view.viewname}}</td>
+                    <td>{{view.camname}}</td>
+                    <td>{{view.statusmsg}}</td>
                     <td>{{view.renderId}}</td>
-                    <td *ngIf="object.status===0"><button (click)="renderScene(view)"><span title= "Render" class="fa fa-play"></span></button></td>
-                    <td *ngIf="object.status===1"><span title="Rendering" class="fa fa-circle-o-notch fa-spin fa-1x"></span></td>
-                    <td *ngIf="object.status===2"><span title= "Open Render" class="fa fa-image"></span></td>
-                    <td *ngIf="object.status===3"><span title="Render Error" class="fa fa-exclamation" style="color:red"></span></td>
-                    <td>{{view.errormsg}}</td>
+                    <td *ngIf="view.status===0"><button (click)="renderScene(view)"><span title= "Render" class="fa fa-play"></span></button></td>
+                    <td *ngIf="view.status===1"><span title="Rendering" class="fa fa-circle-o-notch fa-spin fa-1x"></span></td>
+                    <td *ngIf="view.status===2"><a [attr.href]="view.urn" target="_blank"><span title= "Show fa-image" class="fa fa-image" style="color:blue"></span></a></td>
+                    <td *ngIf="view.status===3"><span title="Render Error" class="fa fa-exclamation" style="color:red"></span></td>
                 </tr> 
             </tbody>
         </table>

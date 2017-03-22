@@ -4,17 +4,18 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { BucketsService, Bucket } from './buckets.service';
 import { ObjectsService, Object } from './objects.service';
 import { ViewsService, View } from './views.service';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-buckets',
   templateUrl: './buckets.component.html',
   styleUrls: ['./buckets.component.css'],
-  providers: [BucketsService, ObjectsService]
+  providers: [BucketsService, ObjectsService, ViewsService, AuthService]
 })
 export class BucketsComponent implements OnInit {
   buckets : Bucket [] = [];
   objects: Object [] = [];
-  views:   String [] = [];
+  views:   View [] = [];
   isLoading = true;
   curBucketKey : string = '';
   showObjectsPanel : boolean = false;
@@ -23,7 +24,9 @@ export class BucketsComponent implements OnInit {
   curSceneId : string = '';
 
   constructor(private bucketsService: BucketsService,
-              private objectsService: ObjectsService) { }
+              private objectsService: ObjectsService,
+              private viewsService: ViewsService,
+              private authService: AuthService) { }
 
   ngOnInit() {
       this.getBuckets();
@@ -76,32 +79,35 @@ export class BucketsComponent implements OnInit {
         regRes => {
           if(regRes!=='error'){
             obj.sceneId = regRes;
-            setInterval(function(){ this.monitor(obj); }, 2000);
-            this.monitor(obj);
+            let self: BucketsComponent = this;
+            setTimeout(function(){ self.monitor(obj,self); }, 2000);
           }
           else{
             obj.status = 3;
+            obj.statusmsg = 'Translation Error!';
           }
         }
     );
   }
 
-  monitor(obj: Object) {
-    this.objectsService.getSceneStatus(obj.sceneId).subscribe(
+  monitor(obj: Object, self: BucketsComponent) {
+    self.objectsService.getSceneStatus(obj.sceneId).subscribe(
       resobj => {
         if( resobj.error === undefined ){
+          obj.statusmsg = resobj.status;
           if(resobj.status==='success'){
             obj.status = 2;
           }
           else if(resobj.status==='error'){
-            resobj.status = 3;
+            obj.status = 3;
           }
           else{
-            setInterval(function(){ this.monitor(obj); }, 2000);
+            setTimeout(function(){ self.monitor(obj, self); }, 2000);
           }
         }
         else{
           obj.status = 3;
+          obj.statusmsg = resobj.error;
         }
       }
     );
@@ -114,15 +120,59 @@ export class BucketsComponent implements OnInit {
       this.getViews(this.curSceneId);
     }
     else{
-      this.showViewsPanel = false;
+      this.showViewsPanel = !this.showViewsPanel;
     }
   }
 
   getViews(sceneId: string){
-    this.views = [];
+    this.authService.getToken().subscribe((token)=>{
+      this.viewsService.getViews(token,this.curSceneId).subscribe((views)=>{
+        this.views = views;
+      });
+    });
   }
 
   renderScene(view: View) {
+    this.authService.getToken().subscribe((token)=>{
+      view.status = 1;
+      this.viewsService.render(token,this.curSceneId,view.viewname,view.camname).subscribe((res)=>{
+        if(res.error!==undefined){
+          view.status = 3;
+          view.statusmsg = res.error;
+        }
+        else
+        {
+            view.renderId = res.renderId;
+            let self: BucketsComponent = this;
+            setTimeout(function(){ self.monitorRender(self.curSceneId, view,self); }, 2000);
+        }
+      });
+    });
+  }
 
+  monitorRender(sceneId: string, view: View, self: BucketsComponent) {
+    this.authService.getToken().subscribe((token)=>{
+      self.viewsService.getRender(token, sceneId, view.renderId).subscribe(
+        resobj => {
+          if (resobj.error !== undefined ){
+            view.status = 3;
+            view.statusmsg = resobj.error;
+          }
+          else{
+            view.statusmsg = resobj.status;
+            if(resobj.status==='success'){
+              view.status = 2;
+              view.urn = resobj.urn;
+            }
+            else if(resobj.status==='error'){
+              view.status = 3;
+            }
+            else{
+              setTimeout(function(){ self.monitorRender(sceneId, view, self); }, 2000);
+            }
+          }
+        }
+      );
+    });
   }
 }

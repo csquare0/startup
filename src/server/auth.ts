@@ -9,7 +9,7 @@ var starttime : number;
 
 export function route() : express.Router {
     let router = express.Router();
-    router.get('/auth', function (req: express.Request, res: express.Response, next) {
+    router.get('/', function (req: express.Request, res: express.Response, next) {
         authentication().then(function (token: IToken) {
             res.send(token.token);
         });

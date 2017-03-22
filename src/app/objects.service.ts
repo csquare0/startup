@@ -52,5 +52,6 @@ export class Object {
     size:      number;
     location:  string;
     status:    number;
+    statusmsg: string;
     sceneId:   string;
 }
