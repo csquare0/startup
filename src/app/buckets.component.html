@@ -9,7 +9,7 @@
     <div>
         <br>
         <input [(ngModel)]="newBucketName" placeholder="name" />
-        <button (click)="addBucket()"><span class="fa fa-file"></span>&nbsp;&nbsp;Add Bucket</button>
+        <button (click)="addBucket()"><span class="fa fa-plus"></span>&nbsp;&nbsp;Add Bucket</button>
     </div>
     <div>
         <h4>Bucket List ({{buckets.length}})</h4>
@@ -36,7 +36,7 @@
             <tbody *ngIf="buckets.length !== 0">
                 <tr *ngFor="let bucket of buckets">
                     <td>{{bucket.bucketKey}}</td>
-                    <td>{{bucket.createdDate}}</td>
+                    <td>{{bucket.createdDate.substring(0,24)}}</td>
                     <td>{{bucket.policyKey}}</td>
                     <td><button (click)="showObjects(bucket.bucketKey)"><span class="fa fa-list"></span></button></td>
                 </tr> 
@@ -49,22 +49,20 @@
 <div *ngIf="showObjectsPanel">
     <div>
         <h4>Object List in {{curBucketKey}} ({{objects.length}})</h4>
+        <p>
+        <div>
+            <button><span class="fa fa-plus"></span>&nbsp;Upload</button>
+            <button (click)="deleteObjects()"><span class="fa fa-minus"></span>&nbsp;Delete</button>
+	   </div>
+       <p>
         <table class="table table-bordered table-striped">
-            <colgroup>
-                <col width="15%" />
-                <col width="25%" />
-                <col width="5%" />
-                <col width="5%" />
-                <col width="45%" />
-                <col width="5%" />
-            </colgroup>
             <thead class="thead-default">
                 <tr>
+                    <th></th>
                     <th>Object Key</th>
                     <th>Object Id</th>
                     <th>Size</th>
                     <th>Status</th>
-                    <th>Location</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -75,11 +73,13 @@
             </tbody>
             <tbody *ngIf="objects.length !== 0">
                 <tr *ngFor="let object of objects">
+                    <td>
+                        <input type="checkbox"  [(ngModel)]="object.selected" (click)="checkObject(object)"/>
+	                </td>
                     <td>{{object.objectKey}}</td>
                     <td>{{object.objectId}}</td>
                     <td>{{object.size}}</td>
                     <td>{{object.statusmsg}}</td>
-                    <td>{{object.location}}</td>
                     <td *ngIf="object.status===0"><button (click)="registerScene(object)"><span title= "Register" class="fa fa-plus"></span></button></td>
                     <td *ngIf="object.status===1"><span title="Translating" class="fa fa-circle-o-notch fa-spin fa-1x"></span></td>
                     <td *ngIf="object.status===2"><button (click)="showViews(object)"><span title= "Show Views" class="fa fa-list"></span></button></td>

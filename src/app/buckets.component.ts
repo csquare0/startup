@@ -12,9 +12,10 @@ import { AuthService } from './auth.service';
   styleUrls: ['./buckets.component.css'],
   providers: [BucketsService, ObjectsService, ViewsService, AuthService]
 })
+
 export class BucketsComponent implements OnInit {
   buckets : Bucket [] = [];
-  objects: Object [] = [];
+  objects : Object [] = [];
   views:   View [] = [];
   isLoading = true;
   curBucketKey : string = '';
@@ -22,6 +23,7 @@ export class BucketsComponent implements OnInit {
   newBucketName : string = '';
   showViewsPanel: boolean = false;
   curSceneId : string = '';
+  selectedObjects = {};
 
   constructor(private bucketsService: BucketsService,
               private objectsService: ObjectsService,
@@ -56,10 +58,17 @@ export class BucketsComponent implements OnInit {
       this.showObjectsPanel = true;
       this.curBucketKey = bucketKey;
       this.objects = [];
-      this.getObjects(this.curBucketKey);
+      this.getObjects(this.curBucketKey);  
+    }
+    if (this.showObjectsPanel === false){
+      this.showViewsPanel = false;
     }
   }
 
+  reloadObjects() {
+    this.objects = [];
+    this.getObjects(this.curBucketKey);
+  }
   getObjects(bucketKey:string) {
     this.curBucketKey = bucketKey;
     this.showObjectsPanel = true;
@@ -71,8 +80,39 @@ export class BucketsComponent implements OnInit {
               });
             }
         );
+    this.selectedObjects = {};
+    this.views = [];
   }
 
+  checkObject(object: Object){
+    object.selected = !!!object.selected;
+  }
+
+  deleteObjectsLoop(token:string, objects: Object[]){
+    if (objects.length===0){
+      return;
+    }
+    this.objectsService.deleteObject(token,this.curBucketKey,objects.pop().objectKey).subscribe((res)=>{
+      if(res.status!==0){
+        console.log(res);
+      }
+      if(objects.length===0){
+        this.reloadObjects();
+      }
+      else{
+        this.deleteObjectsLoop(token,objects);
+      }
+    });
+  }
+
+  deleteObjects(){
+    let selectedIndex = 0;
+    this.authService.getToken().subscribe((token)=>{
+      let selected : Object[] = [];
+      this.objects.forEach(o=>{if(o.selected){selected.push(o);}});
+      this.deleteObjectsLoop(token,selected);
+    });
+  }
   registerScene(obj: Object) {
     obj.status = 1;
     this.objectsService.registerScene(obj.objectId).subscribe(

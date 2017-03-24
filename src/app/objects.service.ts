@@ -1,26 +1,47 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { HandleError, MyResponse } from './util';
+import { Config } from './config';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class ObjectsService {
-    private bucketKey : string = ''; 
-    private bucketURL : string = '';
     private registerURL : string = 'scenes/register';
     private getSceneURL : string = 'scenes/';
     constructor (private http: Http) {}
     getObjects(bucketKey: string) : Observable<Object[]>{
-        this.bucketKey = bucketKey;
-        this.bucketURL = 'buckets/' + bucketKey + '/objects'
-        return this.http.get(this.bucketURL)
-                    .map(this.extractData);
+        let bucketURL = 'buckets/' + encodeURIComponent(bucketKey) + '/objects'
+        return this.http.get(bucketURL)
+                    .map(this.extractData)
+                    .catch(HandleError);
     }
     private extractData(res: Response) {
         let body = res.json();
         return body || [];
+    }
+
+    deleteObject(token: string, bucketKey: string, objectKey: string) : Observable<MyResponse>{
+        let h = new Headers();
+        h.append('Authorization', 'Bearer ' + token);
+        let options = new RequestOptions({ headers: h });
+        let url = Config.OSSURL + 'buckets/' + encodeURIComponent(bucketKey) + '/objects/' + encodeURIComponent(objectKey);
+        return this.http.delete(url, options)
+                .map(this.extractDeleteObjectData)
+                .catch(HandleError);
+    }
+
+    private extractDeleteObjectData(res: Response){
+        let r = new MyResponse();
+        if ( res.status === 200 ){
+            return r;
+        }
+        else{
+            r.status = res.status;
+            r.message = res.statusText;
+        }
     }
 
     registerScene(objURN: string) : Observable<string>{
@@ -54,4 +75,5 @@ export class Object {
     status:    number;
     statusmsg: string;
     sceneId:   string;
+    selected:  boolean;
 }
