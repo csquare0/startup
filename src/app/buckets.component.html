@@ -6,11 +6,7 @@
 </div>
 
 <div *ngIf="!isLoading">
-    <div>
-        <br>
-        <input [(ngModel)]="newBucketName" placeholder="name" />
-        <button (click)="addBucket()"><span class="fa fa-plus"></span>&nbsp;&nbsp;Add Bucket</button>
-    </div>
+    <p>
     <div>
         <h4>Bucket List ({{buckets.length}})</h4>
         <table class="table table-bordered table-striped">

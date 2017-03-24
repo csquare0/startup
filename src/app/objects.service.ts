@@ -42,6 +42,7 @@ export class ObjectsService {
             r.status = res.status;
             r.message = res.statusText;
         }
+        return r;
     }
 
     registerScene(objURN: string) : Observable<string>{

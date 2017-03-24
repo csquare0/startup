@@ -40,11 +40,20 @@ export class BucketsComponent implements OnInit {
     );
   }
 
-  addBucket() {
-
+  addBucket(bucketKey: string) {
+    this.authService.getToken().subscribe((token)=>{
+      this.bucketsService.addBucket(token, bucketKey).subscribe(res=>{
+        if(res.status === undefined || res.status!==0){
+          console.log(res.message || res);
+        }
+        else{
+          this.reloadObjects();
+        }
+      });
+    });
   }
 
-  deleteBucket(){
+  deleteBucket(bucketKey: string){
 
   }
 
@@ -93,8 +102,8 @@ export class BucketsComponent implements OnInit {
       return;
     }
     this.objectsService.deleteObject(token,this.curBucketKey,objects.pop().objectKey).subscribe((res)=>{
-      if(res.status!==0){
-        console.log(res);
+      if(res.status === undefined || res.status!==0){
+        console.log(res.message || res);
       }
       if(objects.length===0){
         this.reloadObjects();
